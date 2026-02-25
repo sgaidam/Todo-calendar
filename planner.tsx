@@ -30,6 +30,17 @@ export default function Planner() {
   ]);
 
   const STORAGE_KEY = "todo-calendar.tasks.v1";
+  const SKY = "#87CEEB";
+  const BURGUNDY = "#800020";
+  const CARD_BG = "rgba(255,255,255,0.85)"; // keeps cards readable on sky blue
+  const styles = {
+    panel: { padding: 16, borderRadius: 12, border: `2px solid ${BURGUNDY}`, background: CARD_BG },
+    input: { padding: 10, borderRadius: 10, border: `1px solid ${BURGUNDY}` },
+    muted: { color: "rgba(128,0,32,0.75)", fontSize: 13 },
+    btnPrimary: { padding: 10, borderRadius: 10, border: `1px solid ${BURGUNDY}`, background: BURGUNDY, color: "white", cursor: "pointer" },
+    btn: { padding: "6px 10px", borderRadius: 10, border: `1px solid ${BURGUNDY}`, background: "transparent", color: BURGUNDY, cursor: "pointer" },
+  } as const;
+
 
 useEffect(() => {
   // load tasks on first mount
@@ -98,11 +109,18 @@ useEffect(() => {
   }
 
   return (
-    <div style={{ maxWidth: 900, margin: "0 auto", padding: 16, display: "grid", gap: 16 }}>
+    <div style={{
+        backgroundColor: SKY,
+        minHeight: "100vh",
+        padding: 16,
+        color: BURGUNDY,
+      }}
+    >
+      <div style={{ maxWidth: 900, margin: "0 auto", padding: 16, display: "grid", gap: 16 }}>
       <h1 style={{ fontSize: 28, fontWeight: 700 }}>Todo Calendar</h1>
 
       <div style={{ display: "grid", gap: 12, gridTemplateColumns: "1fr 1fr" }}>
-        <div style={{ padding: 16, border: "1px solid #ddd", borderRadius: 12 }}>
+      <div style={styles.panel}>
           <h2 style={{ fontSize: 18, fontWeight: 600, marginBottom: 12 }}>Add task</h2>
 
           <form onSubmit={addTask} style={{ display: "grid", gap: 10 }}>
@@ -110,7 +128,7 @@ useEffect(() => {
               value={title}
               onChange={e => setTitle(e.target.value)}
               placeholder="Task title"
-              style={{ padding: 10, borderRadius: 10, border: "1px solid #ccc" }}
+             style={styles.input}
             />
 
             <div style={{ display: "grid", gap: 10, gridTemplateColumns: "1fr 1fr" }}>
@@ -119,7 +137,7 @@ useEffect(() => {
                 <select
                   value={importance}
                   onChange={e => setImportance(Number(e.target.value) as any)}
-                  style={{ padding: 10, borderRadius: 10, border: "1px solid #ccc" }}
+                  style={styles.input}
                 >
                   {[1, 2, 3, 4, 5].map(n => (
                     <option key={n} value={n}>
@@ -137,7 +155,7 @@ useEffect(() => {
                   onChange={e => setEffortMins(Number(e.target.value))}
                   min={5}
                   step={5}
-                  style={{ padding: 10, borderRadius: 10, border: "1px solid #ccc" }}
+                  style={styles.input}
                 />
               </label>
             </div>
@@ -148,7 +166,7 @@ useEffect(() => {
                 type="date"
                 value={dueDate}
                 onChange={e => setDueDate(e.target.value)}
-                style={{ padding: 10, borderRadius: 10, border: "1px solid #ccc" }}
+                style={styles.input}
               />
             </label>
 
@@ -161,23 +179,14 @@ useEffect(() => {
               <span>Must do today</span>
             </label>
 
-            <button
-              type="submit"
-              style={{
-                padding: 10,
-                borderRadius: 10,
-                border: "1px solid #000",
-                background: "#000",
-                color: "#fff",
-                cursor: "pointer",
-              }}
-            >
+            <button type="submit" style={styles.btnPrimary}>
+
               Add
             </button>
           </form>
         </div>
 
-        <div style={{ padding: 16, border: "1px solid #ddd", borderRadius: 12 }}>
+        <div style={styles.panel}>
           <h2 style={{ fontSize: 18, fontWeight: 600, marginBottom: 12 }}>Planning window</h2>
 
           <div style={{ display: "grid", gap: 10, gridTemplateColumns: "1fr 1fr" }}>
@@ -186,7 +195,7 @@ useEffect(() => {
               <input
                 value={dayStart}
                 onChange={e => setDayStart(e.target.value)}
-                style={{ padding: 10, borderRadius: 10, border: "1px solid #ccc" }}
+                style={styles.input}
               />
             </label>
 
@@ -195,7 +204,7 @@ useEffect(() => {
               <input
                 value={dayEnd}
                 onChange={e => setDayEnd(e.target.value)}
-                style={{ padding: 10, borderRadius: 10, border: "1px solid #ccc" }}
+                style={styles.input}
               />
             </label>
           </div>
@@ -208,11 +217,11 @@ useEffect(() => {
               onChange={e => setFocusMins(Number(e.target.value))}
               min={30}
               step={15}
-              style={{ padding: 10, borderRadius: 10, border: "1px solid #ccc" }}
+              style={styles.input}
             />
           </label>
 
-          <p style={{ marginTop: 10, color: "#555" }}>
+          <p style={{ marginTop: 10, ...styles.muted }}>
             This is a greedy scheduler: it ranks tasks using rule-based scoring, then fits what it can
             into your focus window.
           </p>
@@ -220,7 +229,7 @@ useEffect(() => {
       </div>
 
       <div style={{ display: "grid", gap: 12, gridTemplateColumns: "1fr 1fr" }}>
-        <div style={{ padding: 16, border: "1px solid #ddd", borderRadius: 12 }}>
+      <div style={styles.panel}>
           <h2 style={{ fontSize: 18, fontWeight: 600, marginBottom: 12 }}>Tasks</h2>
 
           <div style={{ display: "grid", gap: 10 }}>
@@ -232,8 +241,8 @@ useEffect(() => {
                   gap: 8,
                   padding: 12,
                   borderRadius: 12,
-                  border: "1px solid #eee",
-                  background: t.completed ? "#f6f6f6" : "white",
+                  border: `1px solid ${BURGUNDY}`,
+                background: t.completed ? `rgba(128,0,32,0.08)` : CARD_BG,
                 }}
               >
                 <div style={{ display: "flex", justifyContent: "space-between", gap: 8 }}>
@@ -241,7 +250,7 @@ useEffect(() => {
                     <div style={{ fontWeight: 600, textDecoration: t.completed ? "line-through" : "none" }}>
                       {t.title}
                     </div>
-                    <div style={{ color: "#666", fontSize: 13 }}>
+                    <div style={styles.muted}>
                       importance {t.importance} • {t.effortMins}m
                       {t.dueDate ? ` • due ${t.dueDate}` : ""}
                       {t.mustDoToday ? " • must-do" : ""}
@@ -251,13 +260,13 @@ useEffect(() => {
                   <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
                     <button
                       onClick={() => toggleComplete(t.id)}
-                      style={{ padding: "6px 10px", borderRadius: 10, border: "1px solid #ccc" }}
+                      style={styles.btn}
                     >
                       {t.completed ? "Undo" : "Done"}
                     </button>
                     <button
                       onClick={() => removeTask(t.id)}
-                      style={{ padding: "6px 10px", borderRadius: 10, border: "1px solid #ccc" }}
+                      style={styles.btn}
                     >
                       Delete
                     </button>
@@ -268,20 +277,20 @@ useEffect(() => {
           </div>
         </div>
 
-        <div style={{ padding: 16, border: "1px solid #ddd", borderRadius: 12 }}>
+        <div style={styles.panel}>
           <h2 style={{ fontSize: 18, fontWeight: 600, marginBottom: 12 }}>Today’s plan</h2>
 
           <div style={{ display: "grid", gap: 10 }}>
             {plan.items.map(item => (
               <div
                 key={item.taskId}
-                style={{ padding: 12, borderRadius: 12, border: "1px solid #eee" }}
+                style={{ padding: 12, borderRadius: 12, border: `1px solid ${BURGUNDY}`, background: CARD_BG }}
               >
                 <div style={{ fontWeight: 600 }}>{item.title}</div>
-                <div style={{ color: "#666", fontSize: 13 }}>
+                <div style={styles.muted}>
                   {formatPlanTime(plan.dayStart, item.startMin)} – {formatPlanTime(plan.dayStart, item.endMin)} •
                   score {item.score}
-                  <ul style={{ marginTop: 6, paddingLeft: 18, color: "#666", fontSize: 13 }}>
+                  <ul style={{ marginTop: 6, paddingLeft: 18, ...styles.muted }}>
   {item.reasons?.map((r, idx) => (
     <li key={idx}>{r}</li>
   ))}
@@ -291,14 +300,14 @@ useEffect(() => {
             ))}
 
             {plan.items.length === 0 && (
-              <div style={{ color: "#666" }}>No items scheduled (add tasks or increase focus minutes).</div>
+              <div style={styles.muted}> No items scheduled (add tasks or increase focus minutes).</div>
             )}
           </div>
 
           {plan.unplanned.length > 0 && (
             <>
               <h3 style={{ marginTop: 14, fontSize: 15, fontWeight: 700 }}>Unplanned</h3>
-              <ul style={{ marginTop: 8, color: "#666" }}>
+              <ul style={{ marginTop: 8, color: styles.muted.color }}>
                 {plan.unplanned.map(u => (
                   <li key={u.taskId}>
                     {u.title} — {u.reason}
@@ -308,6 +317,7 @@ useEffect(() => {
             </>
           )}
         </div>
+      </div>
       </div>
     </div>
   );
